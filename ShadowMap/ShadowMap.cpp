@@ -18,7 +18,7 @@
 //#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
 
 //new Version
-#define ShadowMap_SIZE 512
+#define ShadowMap_SIZE 256
 
 #define HELPTEXTCOLOR D3DXCOLOR( 0.0f, 1.0f, 0.3f, 1.0f )
 
@@ -33,10 +33,6 @@ LPCWSTR g_aszMeshFile[] =
 	L"UI\\arrow.x",
 	L"UI\\arrow.x",
 	L"UI\\arrow.x",
-	L"UI\\arrow.x",
-	L"UI\\arrow.x",
-	L"UI\\arrow.x",
-	L"UI\\arrow.x",
 	L"ring.x",
 	L"ring.x",
 };
@@ -47,8 +43,7 @@ LPCWSTR g_aszMeshFile[] =
 
 D3DXMATRIXA16 g_amInitObjWorld[NUM_OBJ] =
 {
-	//D3DXMATRIXA16( 3.5f, 0.0f, 0.0f, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 3.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f ),
-	D3DXMATRIXA16( 0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.3f, 0.0f, 0.0f, -9.0f, 0.0f, 1.0f ),
+	D3DXMATRIXA16( 0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.3f, 0.0f, 0.0f, -9.0f, 5.0f, 1.0f ),
 	D3DXMATRIXA16( 0.43301f, 0.25f, 0.0f, 0.0f, -0.25f, 0.43301f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 5.0f, 1.33975f, 0.0f, 1.0f ),
 	D3DXMATRIXA16( 0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.8f, 0.0f, -14.5f, -7.1f, 0.0f, 1.0f ),
 	D3DXMATRIXA16( 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f, -7.0f, 0.0f, 1.0f ),
@@ -56,10 +51,6 @@ D3DXMATRIXA16 g_amInitObjWorld[NUM_OBJ] =
 	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, 5.0f, 0.2f, -5.0f, 1.0f ),
 	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, -5.0f, 0.2f, 5.0f, 1.0f ),
 	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, -5.0f, 0.2f, -5.0f, 1.0f ),
-	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, 14.0f, 0.2f, 14.0f, 1.0f ),
-	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, 14.0f, 0.2f, -14.0f, 1.0f ),
-	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, -14.0f, 0.2f, 14.0f, 1.0f ),
-	D3DXMATRIXA16( 5.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 5.5f, 0.0f, 0.0f, -9.0f, 0.0f, 0.0f, -14.0f, 0.2f, -14.0f, 1.0f ),
 	D3DXMATRIXA16( 0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, -14.5f, -9.0f, 0.0f, 1.0f ),
 	D3DXMATRIXA16( 0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f, 14.5f, -9.0f, 0.0f, 1.0f ),
 };
@@ -325,38 +316,27 @@ bool                            g_bRightMouseDown = false;// Indicates whether r
 bool                            g_bCameraPerspective = true;               // the camera's or the light's perspective
 
 bool                            g_bFreeLight = true;    // Whether the light is freely moveable.
-float							g_fEpsilon = 0.00001f;
-float							g_fZn = 100.0f;
-float							g_fZf = 10000.0f;
+float							g_fEpsilon = 0.00537f;
+float							g_fZn = 500.0f;
+float							g_fZf = 9000.0f;
 
 C3DCoordinateAxis*				g_CameraAxis = new C3DCoordinateAxis();
 ZFrustum*						g_ZFrustum = new ZFrustum();
-int								g_ZRotation = 0;
 
 
 
 //--------------------------------------------------------------------------------------
 // UI control IDs
 //--------------------------------------------------------------------------------------
-#define IDC_TOGGLEFULLSCREEN 1
-#define IDC_TOGGLEREF        3
-#define IDC_CHANGEDEVICE     4
-#define IDC_CHECKBOX         5
-#define IDC_LIGHTPERSPECTIVE 6
-#define IDC_ATTACHLIGHTTOCAR 7
-#define IDC_EPSILONSLIDER	 8
-#define IDC_SLIDERLABEL		 9
-#define IDC_NORMAL_PROJ		 10
-#define IDC_PERSPECTIVE_PROJ 11
-#define IDC_ORTHOGONAL_PROJ	 12
-#define IDC_ZN_SLIDER		 13
-#define IDC_ZN_LABEL		 14
-#define IDC_ZF_SLIDER		 15
-#define IDC_ZF_LABEL		 16
-#define IDC_VIEW_ZFRUSTUM	 17
-#define IDC_VIEW_3DAXIS		 18
-#define IDC_Z_ROTATION		 19
-#define IDC_Z_ROTATION_LABEL 20
+#define IDC_EPSILONSLIDER	 3
+#define IDC_SLIDERLABEL		 4
+#define IDC_NORMAL_PROJ		 5
+#define IDC_PERSPECTIVE_PROJ 6
+#define IDC_ZN_SLIDER		 7
+#define IDC_ZN_LABEL		 8
+#define IDC_ZF_SLIDER		 9
+#define IDC_ZF_LABEL		 10
+
 
 
 
@@ -370,21 +350,13 @@ void ZnInitCall(CDXUTSlider* pControl)
 	g_LCamera.SetProjParams(D3DX_PI / 4, WIDTH/HEIGHT, g_fZn, g_fZf );
 
 	D3DXMatrixPerspectiveFovLH( &g_mShadowProj_Pers, g_fLightFov, 1, g_fZn, g_fZf);
-	D3DXMatrixOrthoLH(&g_mShadowProj_Ortho, 40, 40, g_fZn, g_fZf );
-
+	
 	CDXUTStatic* pStatic = g_HUD.GetStatic(IDC_ZN_LABEL);
 	TCHAR buffer[24];
 	StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%f", g_fZn);
 	pStatic->SetText(buffer);
-
-	if( g_ShadowType == PERSPECTIVE ||g_ShadowType == NORMAL )
-	{
-		g_mShadowProj = g_mShadowProj_Pers;
-	}
-	else if( g_ShadowType == ORTHOGONAL )
-	{
-		g_mShadowProj = g_mShadowProj_Ortho;
-	}
+	
+	g_mShadowProj = g_mShadowProj_Pers;	
 }
 void ZfInitCall(CDXUTSlider* pControl)
 {
@@ -394,22 +366,14 @@ void ZfInitCall(CDXUTSlider* pControl)
 	g_LCamera.SetProjParams(D3DX_PI / 4, WIDTH/HEIGHT, g_fZn, g_fZf );
 
 	D3DXMatrixPerspectiveFovLH( &g_mShadowProj_Pers, g_fLightFov, 1, g_fZn, g_fZf);
-	D3DXMatrixOrthoLH(&g_mShadowProj_Ortho, 40, 40, g_fZn, g_fZf );
+	
 
 	CDXUTStatic* pStatic = g_HUD.GetStatic(IDC_ZF_LABEL);
 	TCHAR buffer[24];
 	StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%f", g_fZf);
 	pStatic->SetText(buffer);
-
-	if( g_ShadowType == PERSPECTIVE ||g_ShadowType == NORMAL)
-	{
-		g_mShadowProj = g_mShadowProj_Pers;
-	}
-	else if( g_ShadowType == ORTHOGONAL )
-	{
-		g_mShadowProj = g_mShadowProj_Ortho;
-	}
-
+	
+	g_mShadowProj = g_mShadowProj_Pers;	
 }
 
 //--------------------------------------------------------------------------------------
@@ -460,8 +424,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 	D3DXVECTOR3 vLookatPt = D3DXVECTOR3( 0.0f, -10.0f, 0.0f );
 	g_VCamera.SetViewParams( &vFromPt, &vLookatPt );
 
-	vFromPt	= D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-	vLookatPt = D3DXVECTOR3( 0.0f, -10.0f, 0.01f );
+	vFromPt	= D3DXVECTOR3( 0.0f, 10.0f, -35.0f );
+	vLookatPt = D3DXVECTOR3( 0.0f, -10.0f, -0.01f );
 	g_LCamera.SetViewParams( &vFromPt, &vLookatPt );
 
 
@@ -534,28 +498,24 @@ void InitializeDialogs()
 	g_SettingsDlg.Init( &g_DialogResourceManager );
 	g_HUD.Init( &g_DialogResourceManager );
 
-	g_HUD.SetCallback( OnGUIEvent ); int iY = 0;
-	g_HUD.AddCheckBox( IDC_LIGHTPERSPECTIVE, L"View from light's perspective", 0, iY -= 20, 160, 22, false, L'V' );
-	g_HUD.AddCheckBox( IDC_ATTACHLIGHTTOCAR, L"Attach light to car", 0, iY += 24, 160, 22, false, L'F' );
-	g_HUD.AddCheckBox( IDC_VIEW_ZFRUSTUM, L"View ZFrustum", 0, iY += 24, 160, 22, true, L'F' );
-	g_HUD.AddCheckBox( IDC_VIEW_3DAXIS, L"View 3D Axis", 0, iY += 24, 160, 22, true, L'F' );
-	
-	g_HUD.AddSlider( IDC_EPSILONSLIDER, 0, iY+= 24, 160, 22, 1, 100000, (int)g_fEpsilon * 1000000);
+	g_HUD.SetCallback( OnGUIEvent ); 
+
+	int iY = 30;	
+
+	g_HUD.AddSlider( IDC_EPSILONSLIDER, 0, iY += 25, 160, 22, 1, 100000, (int)g_fEpsilon * 1000000);
 
 
 	TCHAR buffer[24];
 	StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%f", g_fEpsilon);
-	g_HUD.AddStatic(IDC_SLIDERLABEL, buffer, 50, iY += 24, 160, 22);
+	g_HUD.AddStatic(IDC_SLIDERLABEL, buffer, 50, iY+= 20, 160, 22);
 
-	g_HUD.AddRadioButton(IDC_NORMAL_PROJ, 1, L"Normal Projection", 20, iY+= 24, 160, 22, true);
-	g_HUD.AddRadioButton(IDC_PERSPECTIVE_PROJ, 1, L"Perspective Projection", 20, iY+= 24, 160, 22, false);
-	g_HUD.AddRadioButton(IDC_ORTHOGONAL_PROJ, 1, L"Orthogonal Projection", 20, iY+= 24, 160, 22, false);
-	g_HUD.AddSlider( IDC_ZN_SLIDER, 0, iY+= 24, 160, 22, 0, 10000, (int)g_fZn);
-	g_HUD.AddStatic(IDC_ZN_LABEL, buffer, 50, iY += 24, 160, 22);
-	g_HUD.AddSlider( IDC_ZF_SLIDER, 0, iY+= 24, 160, 22, 0, 10000, (int)g_fZf);
-	g_HUD.AddStatic(IDC_ZF_LABEL, buffer, 50, iY += 24, 160, 22);	
-	g_HUD.AddSlider(IDC_Z_ROTATION, 0, iY+= 24, 160, 22, 0, 359, g_ZRotation);
-	g_HUD.AddStatic(IDC_Z_ROTATION_LABEL, buffer, 50, iY += 24, 160, 22);	
+	g_HUD.AddRadioButton(IDC_NORMAL_PROJ, 1, L"Normal Projection", 20,iY += 20, 160, 22, true);
+	g_HUD.AddRadioButton(IDC_PERSPECTIVE_PROJ, 1, L"Perspective Projection", 20,iY += 20, 160, 22, false);
+	
+	g_HUD.AddSlider( IDC_ZN_SLIDER, 0, iY+= 20, 160, 22, 0, 10000, (int)g_fZn);
+	g_HUD.AddStatic(IDC_ZN_LABEL, buffer, 50, iY+= 20, 160, 22);
+	g_HUD.AddSlider( IDC_ZF_SLIDER, 0, iY+= 20, 160, 22, 0, 10000, (int)g_fZf);
+	g_HUD.AddStatic(IDC_ZF_LABEL, buffer, 50, iY+= 20, 160, 22);		
 }
 
 
@@ -580,7 +540,7 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 	// need to support D3DFMT_R32F render target
 	if( FAILED( pD3D->CheckDeviceFormat( pCaps->AdapterOrdinal, pCaps->DeviceType,
 		AdapterFormat, D3DUSAGE_RENDERTARGET,
-		D3DRTYPE_CUBETEXTURE, D3DFMT_R32F ) ) )
+		D3DRTYPE_CUBETEXTURE, D3DFMT_R16F ) ) )
 		return false;
 
 	// need to support D3DFMT_A8R8G8B8 render target
@@ -604,22 +564,6 @@ D3DXMATRIX* YDistortionPerspectiveFovLH(D3DXMATRIX* pOut, float fovy, float aspe
 
 	return pOut;
 }
-
-D3DXMATRIX* MyMatrixPerspectiveFovLH2(D3DXMATRIX* pOut, float fovy, float aspect, float zn, float zf)
-{
-	float h = 1.0f/tanf(fovy/2.0f);
-	float w = h / aspect;
-
-	(*pOut)(0, 0) = w;      (*pOut)(0, 1) = 0.0f;				(*pOut)(0, 2) = 0.0f;     (*pOut)(0, 3) = 0.0f;
-	(*pOut)(1, 0) = 0.0f;   (*pOut)(1, 1) = (zf + zn)/(zf-zn);			(*pOut)(1, 2) = 0.0f;     (*pOut)(1, 3) = 1.0f;
-	(*pOut)(2, 0) = 0.0f;   (*pOut)(2, 1) = 0.0f;				(*pOut)(2, 2) = h;        (*pOut)(2, 3) = 0.0f;
-	(*pOut)(3, 0) = 0.0f;   (*pOut)(3, 1) = -2*zf*zn/(zf-zn);	(*pOut)(3, 2) = 0;		  (*pOut)(3, 3) = 0.0f;
-
-	return pOut;
-}
-
-
-
 //--------------------------------------------------------------------------------------
 // This callback function is called immediately before a device is created to allow the 
 // application to modify the device settings. The supplied pDeviceSettings parameter 
@@ -816,7 +760,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 	// Create the shadow map texture
 	V_RETURN( pd3dDevice->CreateTexture( ShadowMap_SIZE, ShadowMap_SIZE,
 		1, D3DUSAGE_RENDERTARGET,
-		D3DFMT_R32F,
+		D3DFMT_X8R8G8B8,
 		D3DPOOL_DEFAULT,
 		&g_pShadowMap,
 		NULL ) );
@@ -847,20 +791,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 	g_ShadowType = NORMAL;
 
 	g_HUD.SetLocation( pBackBufferSurfaceDesc->Width - 170, -40 );
-	g_HUD.SetSize( 170, pBackBufferSurfaceDesc->Height );
-
-	CDXUTControl* pControl = g_HUD.GetControl( IDC_VIEW_3DAXIS );
-	if( pControl )
-		pControl->SetLocation( 0, pBackBufferSurfaceDesc->Height - 70);
-	pControl = g_HUD.GetControl( IDC_VIEW_ZFRUSTUM );	
-	if( pControl )
-		pControl->SetLocation( 0, pBackBufferSurfaceDesc->Height - 45);
-	pControl = g_HUD.GetControl( IDC_LIGHTPERSPECTIVE );
-	if( pControl )
-		pControl->SetLocation( 0, pBackBufferSurfaceDesc->Height - 20 );
-	pControl = g_HUD.GetControl( IDC_ATTACHLIGHTTOCAR );
-	if( pControl )
-		pControl->SetLocation( 0, pBackBufferSurfaceDesc->Height + 5);
+	g_HUD.SetSize( 170, pBackBufferSurfaceDesc->Height );	
 
 	g_CameraAxis->CreateVB(pd3dDevice);	
 
@@ -885,11 +816,11 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 	g_VCamera.FrameMove( fElapsedTime );
 	if(g_ShadowType == PERSPECTIVE)
 	{
-		g_LCamera.FrameMove( fElapsedTime, g_ZRotation );
+		g_LCamera.FrameMove( fElapsedTime, 90 );
 	}
 	else
 	{
-		g_LCamera.FrameMove( fElapsedTime );
+		g_LCamera.FrameMove( fElapsedTime, 30 );
 	}
 	
 
@@ -898,6 +829,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
 	D3DXMatrixRotationY( &m, D3DX_PI * fElapsedTime / 4.0f );
 	D3DXMatrixMultiply( &g_Obj[1].m_mWorld, &g_Obj[1].m_mWorld, &m );
+
 	D3DXMatrixRotationY( &m, -D3DX_PI * fElapsedTime / 4.0f );
 	D3DXMatrixMultiply( &g_Obj[2].m_mWorld, &g_Obj[2].m_mWorld, &m );
 	D3DXVECTOR3 vR( 0.1f, 1.0f, -0.2f );
@@ -1047,14 +979,7 @@ void RenderScene( IDirect3DDevice9* pd3dDevice, bool bRenderShadow, float fElaps
 				// Render the UI elements
 				if( !bRenderShadow )
 				{						
-					if( g_HUD.GetCheckBox(IDC_VIEW_ZFRUSTUM)->GetChecked())
-					{						
-						g_ZFrustum->Draw(pd3dDevice);
-					}	
-					if( g_HUD.GetCheckBox(IDC_VIEW_3DAXIS)->GetChecked())
-					{						
-						g_CameraAxis->Render(pd3dDevice);	
-					}	
+
 					
 					g_HUD.OnRender( fElapsedTime );
 
@@ -1215,13 +1140,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 		RenderScene( pd3dDevice, false, fElapsedTime, pmView, g_VCamera.GetProjMatrix() );
 	}
 
-	
-
 	g_pEffect->SetTexture( "g_txShadow", NULL );
-
-	
-
-	
 }
 
 
@@ -1341,47 +1260,10 @@ void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, bool bMidd
 //--------------------------------------------------------------------------------------
 // Handles the GUI events
 //--------------------------------------------------------------------------------------
-
-
 void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContext )
 {
 	switch( nControlID )
 	{
-	case IDC_TOGGLEFULLSCREEN:
-		DXUTToggleFullScreen(); break;
-	case IDC_TOGGLEREF:
-		DXUTToggleREF(); break;
-	case IDC_CHANGEDEVICE:
-		g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); break;
-	case IDC_CHECKBOX:
-		{
-			CDXUTCheckBox* pCheck = ( CDXUTCheckBox* )pControl;
-			g_bShowHelp = pCheck->GetChecked();
-			break;
-		}
-	case IDC_LIGHTPERSPECTIVE:
-		{
-			CDXUTCheckBox* pCheck = ( CDXUTCheckBox* )pControl;
-			g_bCameraPerspective = !pCheck->GetChecked();
-			if( g_bCameraPerspective )
-			{
-				g_VCamera.SetRotateButtons( true, false, false );
-				g_LCamera.SetRotateButtons( false, false, true );
-			}
-			else
-			{
-				g_VCamera.SetRotateButtons( false, false, false );
-				g_LCamera.SetRotateButtons( true, false, true );
-			}
-
-			break;
-		}
-	case IDC_ATTACHLIGHTTOCAR:
-		{
-			CDXUTCheckBox* pCheck = ( CDXUTCheckBox* )pControl;
-			g_bFreeLight = !pCheck->GetChecked();
-			break;
-		}
 	case IDC_ZN_SLIDER :
 		{
 			ZnInitCall( ( CDXUTSlider* )pControl);
@@ -1392,18 +1274,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 		{
 			ZfInitCall( ( CDXUTSlider* )pControl);
 			break;
-		}
-	case IDC_Z_ROTATION :
-		{
-			CDXUTSlider* pSlider = ( CDXUTSlider* )pControl;
-			g_ZRotation = pSlider->GetValue();
-
-			CDXUTStatic* pStatic = g_HUD.GetStatic(IDC_Z_ROTATION_LABEL);
-			TCHAR buffer[24];
-			StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%d", g_ZRotation);
-			pStatic->SetText(buffer);
-			break;
-		}		
+		}	
 		
 	case IDC_EPSILONSLIDER :
 		{
@@ -1419,18 +1290,37 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 			break;
 		}
 	case IDC_NORMAL_PROJ :
-		g_mShadowProj = g_mShadowProj_Pers;
-		g_ShadowType = NORMAL;
-		break;
-	case IDC_PERSPECTIVE_PROJ :
-		g_mShadowProj = g_mShadowProj_Pers;
-		g_ShadowType = PERSPECTIVE;
-		break;
-	case IDC_ORTHOGONAL_PROJ :
-		g_mShadowProj = g_mShadowProj_Ortho;
-		g_ShadowType = ORTHOGONAL;
-		break;
+		{
+			g_mShadowProj = g_mShadowProj_Pers;
+			g_ShadowType = NORMAL;
 
+			g_fEpsilon = 0.00537f;
+			CDXUTSlider* pSlider = ( CDXUTSlider* )pControl;
+			pSlider->SetValue((int)g_fEpsilon * 1000000);
+			CDXUTStatic* pStatic = g_HUD.GetStatic(IDC_SLIDERLABEL);
+
+			TCHAR buffer[24];
+			StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%f", g_fEpsilon);
+			pStatic->SetText(buffer);
+
+			break;
+		}
+	case IDC_PERSPECTIVE_PROJ :
+		{
+			g_mShadowProj = g_mShadowProj_Pers;
+			g_ShadowType = PERSPECTIVE;
+
+			g_fEpsilon = 0.00537f;
+			CDXUTSlider* pSlider = ( CDXUTSlider* )pControl;
+			pSlider->SetValue((int)g_fEpsilon * 1000000);
+			CDXUTStatic* pStatic = g_HUD.GetStatic(IDC_SLIDERLABEL);
+
+			TCHAR buffer[24];
+			StringCchPrintf(buffer, sizeof(buffer)/sizeof(TCHAR), L"%f", g_fEpsilon);
+			pStatic->SetText(buffer);
+
+			break;
+		}		
 	}
 }
 

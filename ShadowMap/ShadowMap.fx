@@ -7,7 +7,7 @@
 //-----------------------------------------------------------------------------
 
 
-#define SMAP_SIZE 512
+#define SMAP_SIZE 256
 
 float4x4 g_mWorldView;
 float4x4 g_mProj;
@@ -109,39 +109,29 @@ float4 PixScene( float2 Tex : TEXCOORD0,
     float3 vLight = normalize( float3( vPos - g_vLightPos ) );
 
     // Compute diffuse from the light
-    if( (dot( vLight, g_vLightDir ) > g_fCosTheta) || g_bOrthogonal ) // Light must face the pixel (within Theta)
-    {
-        // Pixel is in lit area. Find out if it's
-        // in shadow using 2x2 percentage closest filtering
+    
+    // Pixel is in lit area. Find out if it's
+    // in shadow using 2x2 percentage closest filtering
 
-        //transform from RT space to texture space.
-        float2 ShadowTexC = 0.5 * vPosLight.xy / vPosLight.w + float2( 0.5, 0.5 );
-        ShadowTexC.y = 1.0f - ShadowTexC.y;
+    //transform from RT space to texture space.
+    float2 ShadowTexC = 0.5 * vPosLight.xy / vPosLight.w + float2( 0.5, 0.5 );
+    ShadowTexC.y = 1.0f - ShadowTexC.y;
 
-        // transform to texel space
-        float2 texelpos = SMAP_SIZE * ShadowTexC;
-        
-        // Determine the lerp amounts           
-        float2 lerps = frac( texelpos );
+    // transform to texel space
+    float2 texelpos = SMAP_SIZE * ShadowTexC;
+    
+    // Determine the lerp amounts           
+    float2 lerps = frac( texelpos );
 
-        //read in bilerp stamp, doing the shadow checks
-        float sourcevals[4];
-        sourcevals[0] = (tex2D( g_samShadow, ShadowTexC ) + g_fEpsilon < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[1] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 0) ) + g_fEpsilon < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[2] = (tex2D( g_samShadow, ShadowTexC + float2(0, 1.0/SMAP_SIZE) ) + g_fEpsilon < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[3] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 1.0/SMAP_SIZE) ) + g_fEpsilon < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        
-        // lerp between the shadow values to calculate our light amount
-        float LightAmount = lerp( lerp( sourcevals[0], sourcevals[1], lerps.x ),
-                                  lerp( sourcevals[2], sourcevals[3], lerps.x ),
-                                  lerps.y );
-        // Light it
-        Diffuse = ( saturate( dot( -vLight, normalize( vNormal ) ) ) * LightAmount * ( 1 - g_vLightAmbient ) + g_vLightAmbient )
-                  * g_vMaterial;
-    } else
-    {
-        Diffuse = g_vLightAmbient * g_vMaterial;
-    }
+    //read in bilerp stamp, doing the shadow checks
+    float sourceval;
+    sourceval = (tex2D( g_samShadow, ShadowTexC ) + g_fEpsilon < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
+  
+    
+    // lerp between the shadow values to calculate our light amount
+    
+    // Light it
+    Diffuse = ( saturate( dot( -vLight, normalize( vNormal ) ) ) * sourceval * ( 1 - g_vLightAmbient ) + g_vLightAmbient ) * g_vMaterial;    
 
     return tex2D( g_samScene, Tex ) * Diffuse;
 }

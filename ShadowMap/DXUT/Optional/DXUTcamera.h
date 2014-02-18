@@ -212,7 +212,7 @@ public:
 
     // Call these from client and use Get*Matrix() to read new matrices
     virtual void    FrameMove( FLOAT fElapsedTime );
-	virtual void    FrameMove( FLOAT fElapsedTime, int zRotation);	
+	virtual void    FrameMove( FLOAT fElapsedTime, int xRotation);	
 
     // Functions to change behavior
     void            SetRotateButtons( bool bLeft, bool bMiddle, bool bRight, bool bRotateWithoutButtonDown = false );

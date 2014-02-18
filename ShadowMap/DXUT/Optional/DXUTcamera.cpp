@@ -717,7 +717,7 @@ CFirstPersonCamera::CFirstPersonCamera() : m_nActiveButtonMask( 0x07 )
 }
 
 
-VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime, int zRotation )
+VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime, int xRotation )
 {
 	if( DXUTGetGlobalTimer()->IsStopped() ) {
 		if (DXUTGetFPS() == 0.0f) fElapsedTime = 0;
@@ -763,11 +763,11 @@ VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime, int zRotation )
 		m_fCameraPitchAngle = __min( +D3DX_PI / 2.0f, m_fCameraPitchAngle );
 	}
 
-	float Rad_ZRotation = D3DXToRadian(zRotation);
+	float Rad_XRotation = D3DXToRadian(xRotation);
 	// Make a rotation matrix based on the camera's yaw & pitch
 	D3DXMATRIX mCameraRot;
 	
-	D3DXMatrixRotationYawPitchRoll( &mCameraRot, m_fCameraYawAngle, m_fCameraPitchAngle, Rad_ZRotation );
+	D3DXMatrixRotationYawPitchRoll( &mCameraRot, m_fCameraYawAngle, Rad_XRotation, 0 );
 
 	// Transform vectors based on camera's rotation matrix
 	D3DXVECTOR3 vWorldUp, vWorldAhead;
